@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html data-ng-app="produtosApp">
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body ng-controller="ProdutosController">
+        <form>
+            <h1>Inserir Dados</h1>
+            <label for="descricao">Descrição: </label>
+            <input id="descricao" name="descricao" type="text" ng-model="produto.descricao"/>
+            <br>
+            <label for="preco">Preço: </label>
+            <input id="preco" name="preco" type="text" ng-model="produto.preco"/>
+            <br>
+            <label for="quantidade">Quantidade: </label>
+            <input id="quantidade" name="quantidade" type="text" ng-model="produto.quantidade"/>
+            <br>
+            <button ng-click="salvar(produto)"> Salvar </button>
+            
+        </form>
+        <h1>Tabela de Informações</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Preço</th>
+                    <th>Quantidadae</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="produto in produtos track by $index">
+                    <td>{{produto.descricao}}</td>
+                    <td>{{produto.preco}}</td>
+                    <td>{{produto.quantidade}}</td>
+                    <td><a href="" ng-click="excluir(produto)">[Excluir]</a></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <script src="js/angular.min.js"></script>
+        <script>
+            var app = angular.module('produtosApp', []);
+            
+    app.controller('ProdutosController', function($scope, ProdutosService){
+               
+            
+        $scope.produto = {};
+        $scope.produtos = ProdutosService.listar();
+        
+        $scope.salvar = function(produto){
+            ProdutosService.salvar(produto);
+            $scope.produto = {};
+        }
+        
+        $scope.excluir = function(produto){
+            ProdutosService.excluir(produto);
+        };
+        
+        });
+         
+        app.service('ProdutosService', function(){
+              var produtos = [{
+                        descricao: 'tv',
+                        preco: 350.50,
+                        quantidade: 2
+                }];
+            
+            this.listar = function(){
+                return produtos;
+            };
+            
+            this.salvar = function(produto){
+                produtos.push(produto);
+            };
+            
+            this.excluir = function(produto){
+               for(var i= 0, length=produtos.length; i<length; i++){
+                if(produtos[i].descricao === produto.descricao){
+                    produtos.splice(i,1);
+                }
+            } 
+            };
+            
+         }); 
+         
+       
+            
+         
+        </script>
+    </body>
+</html>
